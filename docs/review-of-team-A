@@ -1,0 +1,6 @@
+Mis oli nende töös hästi
+Meeskond on loonud väga põhjaliku ja läbimõeldud turvatestide ploki, kasutades nutikalt test.each meetodit erinevate XSS- ja SQL-inъекtsioonide katsetamiseks.
+
+Funktsioonide loogika ja andmete muutumatuse (immutability) kontrollid on üles ehitatud puhtalt ning loogiliselt.
+
+Jõudlustesti ülesseade on eeskujulik, mõõtes täpselt koodi täitmisaega performance.now() abil ja seades selged numbrilised piirangud.
