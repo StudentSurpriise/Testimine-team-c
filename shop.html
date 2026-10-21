@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>MiniShop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root { --ink:#1b1f24; --muted:#6b7280; --line:#d9dee5; --accent:#1e9e5a; --bg:#f6f8fa; --danger:#c0392b; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:var(--ink); background:var(--bg); }
+    header { background:#fff; border-bottom:1px solid var(--line); padding:14px 24px; display:flex; align-items:center; justify-content:space-between; }
+    header h1 { margin:0; font-size:20px; }
+    nav a { margin-left:18px; color:var(--ink); text-decoration:none; font-weight:600; }
+    nav a[aria-current="page"] { color:var(--accent); border-bottom:2px solid var(--accent); }
+    main { max-width:960px; margin:24px auto; padding:0 16px; }
+    section[hidden] { display:none; }
+    .toolbar { display:flex; gap:12px; align-items:center; margin-bottom:16px; flex-wrap:wrap; }
+    .toolbar input[type=search] { flex:1; min-width:180px; padding:10px 12px; border:1px solid var(--line); border-radius:6px; font-size:15px; }
+    .toolbar select { padding:10px; border:1px solid var(--line); border-radius:6px; font-size:14px; background:#fff; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:14px; }
+    .card { background:#fff; border:1px solid var(--line); border-radius:8px; padding:14px; }
+    .card h3 { margin:0 0 4px; font-size:16px; }
+    .card .cat { color:var(--muted); font-size:13px; }
+    .card .price { font-weight:700; margin:10px 0; }
+    button { background:var(--accent); color:#fff; border:0; border-radius:6px; padding:9px 14px; font-size:14px; cursor:pointer; }
+    button.secondary { background:#fff; color:var(--ink); border:1px solid var(--line); }
+    table { width:100%; border-collapse:collapse; background:#fff; }
+    th, td { text-align:left; padding:10px; border-bottom:1px solid var(--line); }
+    tfoot td { font-weight:700; }
+    td input[type=number] { width:64px; padding:6px; border:1px solid var(--line); border-radius:6px; font-size:14px; }
+    .empty { color:var(--muted); padding:24px; text-align:center; background:#fff; border:1px dashed var(--line); border-radius:8px; }
+    form { background:#fff; border:1px solid var(--line); border-radius:8px; padding:18px; max-width:480px; }
+    .inline { display:flex; gap:8px; align-items:flex-end; margin:14px 0; }
+    .inline label { margin:0 0 4px; }
+    .inline input { width:180px; padding:9px 11px; border:1px solid var(--line); border-radius:6px; font-size:15px; }
+    label { display:block; font-weight:600; margin:12px 0 4px; }
+    form input { width:100%; padding:9px 11px; border:1px solid var(--line); border-radius:6px; font-size:15px; }
+    .error { color:var(--danger); font-size:13px; margin-top:4px; min-height:16px; }
+    .ok { color:#14532d; font-size:13px; margin-top:4px; min-height:16px; }
+    .alert { background:#e6f4ec; border:1px solid #bfe3cf; color:#14532d; padding:14px; border-radius:8px; margin-top:16px; }
+    .badge { background:var(--accent); color:#fff; border-radius:999px; padding:2px 8px; font-size:12px; margin-left:6px; }
+    @media (max-width: 520px) { nav a .label { display:none; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>MiniShop</h1>
+    <nav aria-label="Main">
+      <a href="#products" id="nav-products" aria-current="page"><span class="label">Products</span></a>
+      <a href="#cart" id="nav-cart" aria-label="Basket"><span class="label">Basket</span><span class="badge" id="cart-count" data-testid="cart-count">0</span></a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="products" aria-labelledby="products-title">
+      <h2 id="products-title">Products</h2>
+      <div class="toolbar">
+        <input id="search" type="search" placeholder="Search products" aria-label="Search products">
+        <select id="sort" aria-label="Sort by">
+          <option value="name">Name</option>
+          <option value="price-asc">Price: low to high</option>
+          <option value="price-desc">Price: high to low</option>
+        </select>
+        <span id="result-count" data-testid="result-count"></span>
+      </div>
+      <div class="grid" id="product-grid"></div>
+    </section>
+
+    <section id="cart" aria-labelledby="cart-title" hidden>
+      <h2 id="cart-title">Your basket</h2>
+      <div id="cart-body"></div>
+
+      <div class="inline" id="discount-box">
+        <div>
+          <label for="discount">Discount code</label>
+          <input id="discount" name="discount" autocomplete="off">
+        </div>
+        <button type="button" id="apply-discount">Apply</button>
+        <div id="discount-message" role="status" data-testid="discount-message" class="ok"></div>
+      </div>
+
+      <h2 id="checkout-title">Checkout</h2>
+      <form id="checkout" novalidate>
+        <label for="name">Full name</label>
+        <input id="name" name="name" autocomplete="name">
+        <div class="error" id="name-error" role="alert"></div>
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email">
+        <div class="error" id="email-error" role="alert"></div>
+
+        <label for="address">Delivery address</label>
+        <input id="address" name="address" autocomplete="street-address">
+        <div class="error" id="address-error" role="alert"></div>
+
+        <button type="submit" style="margin-top:14px">Place order</button>
+      </form>
+      <div id="order-result"></div>
+    </section>
+  </main>
+
+  <script src="shop-logic.js"></script>
+  <script src="shop.js"></script>
+</body>
+</html>
